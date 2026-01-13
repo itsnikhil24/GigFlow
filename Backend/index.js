@@ -11,8 +11,7 @@ import authRoutes from "./routes/auth.routes.js";
 import gigRoutes from "./routes/gig.routes.js";
 import bidRoutes from "./routes/bid.routes.js";
 
-// Socket helpers
-import { initSocket } from "./socket/socket.js";
+
 
 // Load env variables
 dotenv.config();
@@ -65,8 +64,6 @@ const io = new SocketServer(server, {
   },
 });
 
-// Attach Socket.io to helper
-initSocket(server);
 
 // Start server
 const PORT = process.env.PORT || 5000;
