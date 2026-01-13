@@ -8,73 +8,47 @@ import { notifyUser } from "../socket/socket.js";
  * PATCH /api/bids/:bidId/hire
  */
 export const hireBid = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     const { bidId } = req.params;
     const clientId = req.user.id;
 
-    // Fetch bid
-    const bid = await Bid.findById(bidId).session(session);
+    const bid = await Bid.findById(bidId);
     if (!bid) {
       return res.status(404).json({ message: "Bid not found" });
     }
 
-    // Fetch gig
-    const gig = await Gig.findById(bid.gigId).session(session);
+    const gig = await Gig.findById(bid.gigId);
     if (!gig) {
       return res.status(404).json({ message: "Gig not found" });
     }
 
-    // Authorization: only gig owner can hire
     if (gig.ownerId.toString() !== clientId) {
-      return res.status(403).json({
-        message: "You are not authorized to hire for this gig",
-      });
+      return res.status(403).json({ message: "Unauthorized" });
     }
 
-    // Prevent double hiring (race condition protection)
     if (gig.status === "assigned") {
-      return res.status(400).json({
-        message: "This gig has already been assigned",
-      });
+      return res.status(400).json({ message: "Gig already assigned" });
     }
 
-    // Update gig status
+    // 1. Assign gig
     gig.status = "assigned";
-    await gig.save({ session });
+    await gig.save();
 
-    // Reject all bids for this gig
-    await Bid.updateMany(
-      { gigId: gig._id },
-      { status: "rejected" },
-      { session }
-    );
-
-    // Mark selected bid as hired
+    // 2. Hire selected bid
     bid.status = "hired";
-    await bid.save({ session });
+    await bid.save();
 
-    // Commit transaction
-    await session.commitTransaction();
-    session.endSession();
-
-    // 🔔 Real-time notification (Bonus)
-    notifyUser(
-      bid.freelancerId.toString(),
-      `You have been hired for "${gig.title}"`
+    // 3. Reject other bids
+    await Bid.updateMany(
+      { gigId: gig._id, _id: { $ne: bid._id } },
+      { status: "rejected" }
     );
 
-    res.status(200).json({
-      message: "Freelancer hired successfully",
-    });
+    res.status(200).json({ message: "Freelancer hired successfully" });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-
-    res.status(500).json({
-      message: "Failed to hire freelancer",
-    });
+    console.error("Hire error:", error);
+    res.status(500).json({ message: "Failed to hire freelancer" });
   }
 };
+
+

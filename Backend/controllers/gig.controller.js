@@ -97,3 +97,17 @@ export const deleteGig = async (req, res) => {
     res.status(500).json({ message: "Failed to delete gig" });
   }
 };
+
+/**
+ * Get gigs created by the current user
+ * GET /api/gigs/my
+ */
+export const getMyGigs = async (req, res) => {
+  try {
+    const gigs = await Gig.find({ ownerId: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json(gigs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch your gigs" });
+  }
+};

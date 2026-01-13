@@ -95,3 +95,24 @@ export const getBidsByGig = async (req, res) => {
     });
   }
 };
+
+/**
+ * Get logged-in user's bids
+ * GET /api/bids/my
+ */
+export const getMyBids = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const bids = await Bid.find({ freelancerId: userId })
+      .populate("gigId", "title budget status")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(bids);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch bids",
+    });
+  }
+};
+
