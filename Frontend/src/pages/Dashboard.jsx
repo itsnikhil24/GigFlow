@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -10,7 +11,8 @@ import {
     Clock,
     CheckCircle,
 } from "lucide-react";
-import { Layout } from '../components/layout/layout'; // Ensure correct path to your Layout
+import { Layout } from '../components/layout/layout';
+
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -24,7 +26,6 @@ export default function Dashboard() {
     useEffect(() => {
         const loadDashboard = async () => {
             try {
-                // Ensure these endpoints match your backend exactly
                 const [userRes, gigsRes, bidsRes] = await Promise.all([
                     fetch("http://localhost:3000/api/auth/me", { credentials: "include" }),
                     fetch("http://localhost:3000/api/gigs/mygig", { credentials: "include" }),
@@ -54,27 +55,19 @@ export default function Dashboard() {
     }, [navigate]);
 
     // 🧮 Stats Logic
-    // FIXED: Check g.ownerId._id because backend populates ownerId
     const myGigs = gigs;
-
-
     const pendingBids = bids.filter(b => b.status === "pending");
     const hiredBids = bids.filter(b => b.status === "hired");
 
     // Helper to find gig title
     const getGigTitle = (bid) => {
         if (!bid?.gigId) return "Unknown Gig";
-
-        // If populated
         if (typeof bid.gigId === "object") {
             return bid.gigId.title;
         }
-
-        // If only ID
         const gig = gigs.find(g => g._id === bid.gigId);
         return gig ? gig.title : "Unknown Gig";
     };
-
 
     if (loading) {
         return (
@@ -195,10 +188,10 @@ export default function Dashboard() {
                     {/* Lists Section */}
                     <div className="grid lg:grid-cols-2 gap-8">
 
-                        {/* Recent Bids List */}
-                        <div className="bg-white rounded-2xl">
+                        {/* Recent Bids List Container */}
+                        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-2 mb-6">
-                                <MessageSquare className="text-cyan-600" size={20} />
+                                <MessageSquare className="text-cyan-600" size={24} />
                                 <h3 className="text-xl font-bold text-slate-900">My Recent Bids</h3>
                             </div>
 
@@ -211,7 +204,7 @@ export default function Dashboard() {
                                     {bids.slice(0, 3).map(b => (
                                         <Link
                                             key={b._id}
-                                            // to={`/gigs/${typeof b.gigId === 'object' ? b.gigId._id : b.gigId}`}
+                                            to={`/gig/${typeof b.gigId === 'object' ? b.gigId._id : b.gigId}`}
                                             className="flex justify-between items-center p-5 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors group"
                                         >
                                             <div>
@@ -232,10 +225,10 @@ export default function Dashboard() {
                             )}
                         </div>
 
-                        {/* Posted Gigs List */}
-                        <div className="bg-white rounded-2xl">
+                        {/* Posted Gigs List Container */}
+                        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-2 mb-6">
-                                <Briefcase className="text-indigo-600" size={20} />
+                                <Briefcase className="text-indigo-600" size={24} />
                                 <h3 className="text-xl font-bold text-slate-900">My Posted Gigs</h3>
                             </div>
 
@@ -256,8 +249,7 @@ export default function Dashboard() {
                                                     {g.title}
                                                 </p>
                                                 <div className="flex gap-3 text-sm text-slate-500 mt-1">
-                                                    <span>{g.bids ? g.bids.length : 0} bids</span>
-                                                    <span>•</span>
+                                                   
                                                     <span>₹{g.budget}</span>
                                                 </div>
                                             </div>

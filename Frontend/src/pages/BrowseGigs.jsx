@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -135,7 +137,7 @@ const BrowseGigs = () => {
                     </div>
 
                     {/* Body */}
-                    <p className="text-gray-600 text-sm mb-6 line-clamp-3 flex-grow">
+                    <p className="text-gray-600 text-sm mb-6 line-clamp-3 grow">
                       {gig.description}
                     </p>
 
@@ -147,7 +149,7 @@ const BrowseGigs = () => {
                         <div className="h-8 w-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xs border border-indigo-100">
                            {gig.ownerId?.name ? gig.ownerId.name.charAt(0).toUpperCase() : <UserCircle className="w-5 h-5" />}
                         </div>
-                        <span className="text-sm font-medium text-gray-700 truncate max-w-[100px]">
+                        <span className="text-sm font-medium text-gray-700 truncate max-w-25">
                           {gig.ownerId?.name || "Unknown"}
                         </span>
                       </div>

@@ -1,14 +1,21 @@
+/* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { Briefcase, Plus, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
+import { Bell } from "lucide-react";
+
+
 
 export function Header() {
   const { user, logout } = useAuth(); // Removed isAuthenticated, just checking 'user' is usually enough
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
 
   const handleLogout = () => {
     logout();
@@ -27,10 +34,13 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // 🔔 Real-time notifications via Socket.io
+  
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
-        
+
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
           <motion.div
@@ -60,12 +70,7 @@ export function Header() {
               >
                 Dashboard
               </Link>
-              <Link
-                to="/my-gigs"
-                className="text-sm font-medium text-gray-500 transition-colors hover:text-indigo-600"
-              >
-                My Gigs
-              </Link>
+
             </>
           )}
         </nav>
@@ -75,7 +80,7 @@ export function Header() {
           {user ? (
             <>
               {/* Post Gig Button */}
-              <Link 
+              <Link
                 to="/gigs/new"
                 className="hidden sm:inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
               >
@@ -107,18 +112,18 @@ export function Header() {
                         <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                       </div>
-                      
+
                       <div className="py-1">
-                        <Link 
-                          to="/dashboard" 
+                        <Link
+                          to="/dashboard"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                           onClick={() => setIsDropdownOpen(false)}
                         >
                           <LayoutDashboard className="mr-2 h-4 w-4" />
                           Dashboard
                         </Link>
-                        <Link 
-                          to="/profile" 
+                        <Link
+                          to="/profile"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                           onClick={() => setIsDropdownOpen(false)}
                         >
@@ -126,7 +131,7 @@ export function Header() {
                           Profile
                         </Link>
                       </div>
-                      
+
                       <div className="border-t border-gray-100 pt-1 pb-1">
                         <button
                           onClick={handleLogout}
@@ -143,13 +148,13 @@ export function Header() {
             </>
           ) : (
             <>
-              <Link 
+              <Link
                 to="/login"
                 className="text-sm font-medium text-gray-700 hover:text-indigo-600 px-3 py-2 transition-colors"
               >
                 Log in
               </Link>
-              <Link 
+              <Link
                 to="/signup"
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
               >

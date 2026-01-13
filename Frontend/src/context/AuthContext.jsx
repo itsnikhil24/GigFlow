@@ -1,5 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+
 
 const AuthContext = createContext();
 
@@ -21,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     };
     fetchUser();
   }, []);
+
 
   const login = async (email, password) => {
     const res = await axios.post('http://localhost:3000/api/auth/login', { email, password }, { withCredentials: true });
