@@ -174,7 +174,7 @@ export default function Dashboard() {
                                 <h3 className="text-xl font-bold mb-2 text-slate-900">Find Work</h3>
                                 <p className="text-slate-500 mb-6 max-w-xs">Browse open gigs and submit proposals to start earning.</p>
                                 <Link
-                                    to="/gigs"
+                                    to="/browse-gigs"
                                     className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors bg-white"
                                 >
                                     <TrendingUp size={18} /> Browse Gigs
