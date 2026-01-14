@@ -1,8 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { createContext, useContext, useEffect, useState } from "react";
+import api from "../api/axios";
 
 const AuthContext = createContext();
 
@@ -10,11 +7,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check if user is logged in
+  // 🔥 Auto-login on refresh
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/auth/me`, { withCredentials: true });
+        const res = await api.get("/auth/me");
         setUser(res.data.user);
       } catch {
         setUser(null);
@@ -22,17 +19,17 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
+
     fetchUser();
   }, []);
 
-
   const login = async (email, password) => {
-    const res = await axios.post(`${API_URL}/api/auth/login`, { email, password }, { withCredentials: true });
-    setUser(res.data.user);
+    const res = await api.post("/auth/login", { email, password });
+    setUser(res.data.user); // 🔥 THIS WAS MISSING
   };
 
   const logout = async () => {
-    await axios.post(`${API_URL}/api/auth/logout`, {}, { withCredentials: true });
+    await api.post("/auth/logout");
     setUser(null);
   };
 

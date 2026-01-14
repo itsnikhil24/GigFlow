@@ -27,12 +27,14 @@ export default function Signup() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', 
                 body: JSON.stringify({
                     name,
                     email,
                     password,
                 }),
             })
+
 
             let data = {}
             const text = await res.text()

@@ -19,21 +19,21 @@ export default function GigDetail() {
   const { user } = useAuth();
 
   const [gig, setGig] = useState(null);
-  const [bids, setBids] = useState([]); // Owner: all bids
-  const [myBid, setMyBid] = useState(null); // Freelancer: my bid
+  const [bids, setBids] = useState([]);
+  const [myBid, setMyBid] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Modal States
   const [showBidModal, setShowBidModal] = useState(false);
   const [showHireModal, setShowHireModal] = useState(false);
   const [selectedBidToHire, setSelectedBidToHire] = useState(null);
 
-  // Form & Action States
   const [bidForm, setBidForm] = useState({ price: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [hiring, setHiring] = useState(false);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -43,65 +43,60 @@ export default function GigDetail() {
 
         if (!user) return;
 
-        const isOwner = gigData.ownerId._id === user.id;
+        const isOwner = gigData?.ownerId?._id === user.id;
 
         if (isOwner) {
-          // OWNER → all bids
           const { data } = await api.get(`/bids/${id}`);
           setBids(data);
         } else {
-          // FREELANCER → only my bid
           const { data } = await api.get(`/bids/mybid`);
           const foundBid = data.find(b =>
-            (typeof b.gigId === "object" ? b.gigId._id : b.gigId) === id
+            (typeof b.gigId === 'object' ? b.gigId._id : b.gigId) === id
           );
           setMyBid(foundBid || null);
         }
 
       } catch (err) {
-        toast.error("Failed to load gig details");
+        toast.error('Failed to load gig details');
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (id && user) fetchData();
+    fetchData();
   }, [id, user]);
-
 
   const handlePlaceBid = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+
     try {
       const { data } = await api.post('/bids', {
         gigId: id,
         price: Number(bidForm.price),
-        message: bidForm.message
+        message: bidForm.message,
       });
 
       setMyBid(data.bid);
       setShowBidModal(false);
-      toast.success("Bid placed successfully!");
+      toast.success('Bid placed successfully!');
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to place bid");
+      toast.error(error.response?.data?.message || 'Failed to place bid');
     } finally {
       setSubmitting(false);
     }
   };
 
-  // 1. Open the confirmation modal
   const handleHireClick = (bidId) => {
     setSelectedBidToHire(bidId);
     setShowHireModal(true);
   };
 
-  // 2. Actually execute the hire logic
   const confirmHire = async () => {
     if (!selectedBidToHire) return;
 
     setHiring(true);
-
     try {
       await api.patch(`/bids/${selectedBidToHire}/hire`);
 
@@ -115,29 +110,35 @@ export default function GigDetail() {
         )
       );
 
-      toast.success("Freelancer hired successfully!");
+      toast.success('Freelancer hired successfully!');
       setShowHireModal(false);
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Failed to hire freelancer");
+      toast.error(error.response?.data?.message || 'Failed to hire freelancer');
     } finally {
       setHiring(false);
       setSelectedBidToHire(null);
     }
   };
 
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex h-screen items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-900"></div>
+        </div>
+      </Layout>
+    );
+  }
 
-  if (loading) return (
-    <Layout>
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-900"></div>
-      </div>
-    </Layout>
-  );
+  if (!gig) {
+    return (
+      <Layout>
+        <div className="p-10 text-center">Gig not found</div>
+      </Layout>
+    );
+  }
 
-  if (!gig) return <Layout><div className="p-10 text-center">Gig not found</div></Layout>;
-
-  const isOwner = user?.id === gig.ownerId._id;
+  const isOwner = user && gig?.ownerId?._id === user.id;
   const isOpen = gig.status === 'open';
   const bidsCount = isOwner ? bids.length : (gig.bids?.length || 0);
 

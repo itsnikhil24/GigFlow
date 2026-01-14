@@ -4,11 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react"; // Added Loader2
+import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Login() {
   const navigate = useNavigate();
+    const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,11 +24,7 @@ export default function Login() {
     setError("");
 
     try {
-      await axios.post(
-        `${API_URL}/api/auth/login`,
-        { email, password },
-        { withCredentials: true }
-      );
+      await login(email, password);
 
       navigate("/dashboard");
     } catch (err) {
