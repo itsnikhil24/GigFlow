@@ -1,5 +1,4 @@
 import express from "express";
-import http from "http";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -31,22 +30,15 @@ const connectDB = async () => {
 
 connectDB();
 
-/* -------------------- CORS (FIXED) -------------------- */
-const allowedOrigins = [
-  process.env.CLIENT_URL,      // production frontend (Vercel etc.)
-  "http://localhost:5173",      // Vite local
-  "http://localhost:3000",
-];
-
+/* -------------------- CORS (PRODUCTION SAFE) -------------------- */
+/**
+ * CLIENT_URL examples:
+ * - http://localhost:5173
+ * - https://gigflow-frontend.vercel.app
+ */
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow Postman, curl
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("CORS not allowed"));
-    },
+    origin: process.env.CLIENT_URL,
     credentials: true, // REQUIRED for cookies
   })
 );
@@ -66,7 +58,7 @@ app.get("/", (req, res) => {
 });
 
 /* -------------------- SERVER -------------------- */
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000; // Render uses dynamic ports
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
