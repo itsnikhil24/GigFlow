@@ -36,7 +36,7 @@ const CreateGig = () => {
     try {
       // The backend expects { title, description, budget }
       // The cookie is sent automatically by 'api' if withCredentials is true
-      const response = await api.post(`${API_URL}/gigs`, {
+      const response = await api.post("/gigs", {
         title: formData.title,
         description: formData.description,
         budget: Number(formData.budget) // Ensure budget is sent as a number
@@ -60,7 +60,7 @@ const CreateGig = () => {
       <div className="min-h-screen bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           {/* Back Button */}
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="flex items-center text-gray-500 hover:text-gray-700 mb-6 transition-colors group"
           >
@@ -68,7 +68,7 @@ const CreateGig = () => {
             Back
           </button>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
@@ -87,7 +87,7 @@ const CreateGig = () => {
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-8">
-                
+
                 {/* Gig Title */}
                 <div className="space-y-2">
                   <label htmlFor="title" className="block text-sm font-medium text-gray-900">
@@ -160,7 +160,7 @@ const CreateGig = () => {
                   >
                     Cancel
                   </button>
-                  
+
                   <button
                     type="submit"
                     disabled={loading}
