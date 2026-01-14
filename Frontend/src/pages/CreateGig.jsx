@@ -36,7 +36,7 @@ const CreateGig = () => {
     try {
       // The backend expects { title, description, budget }
       // The cookie is sent automatically by 'api' if withCredentials is true
-      const response = await api.post(`${API_URL}/api/gigs`, {
+      const response = await api.post(`${API_URL}/gigs`, {
         title: formData.title,
         description: formData.description,
         budget: Number(formData.budget) // Ensure budget is sent as a number
