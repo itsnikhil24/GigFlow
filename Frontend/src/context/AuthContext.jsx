@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${API_URL}api/auth/me`, { withCredentials: true });
+        const res = await axios.get(`${API_URL}/api/auth/me`, { withCredentials: true });
         setUser(res.data.user);
       } catch {
         setUser(null);
@@ -27,12 +27,12 @@ export const AuthProvider = ({ children }) => {
 
 
   const login = async (email, password) => {
-    const res = await axios.post(`${API_URL}api/auth/login`, { email, password }, { withCredentials: true });
+    const res = await axios.post(`${API_URL}/api/auth/login`, { email, password }, { withCredentials: true });
     setUser(res.data.user);
   };
 
   const logout = async () => {
-    await axios.post(`${API_URL}api/auth/logout`, {}, { withCredentials: true });
+    await axios.post(`${API_URL}/api/auth/logout`, {}, { withCredentials: true });
     setUser(null);
   };
 
