@@ -28,7 +28,7 @@ npm install
 ### 3. Create .env File
 ```bash
 
-# MONGO_URI=mongodb+srv://NikhilSharma:i4Jjc0djGMSgqLh3@cluster0.wmrx8i4.mongodb.net/?appName=Cluster0
+
 MONGO_URI=<Your-string>
 
 JWT_SECRET=<your-secret
