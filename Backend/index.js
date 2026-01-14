@@ -30,12 +30,10 @@ const connectDB = async () => {
 
 connectDB();
 
-/* -------------------- CORS (PRODUCTION SAFE) -------------------- */
-/**
- * CLIENT_URL examples:
- * - http://localhost:5173
- * - https://gigflow-frontend.vercel.app
- */
+
+app.use(express.json());
+app.use(cookieParser());
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -43,11 +41,9 @@ app.use(
   })
 );
 
-/* -------------------- MIDDLEWARE -------------------- */
-app.use(express.json());
-app.use(cookieParser());
 
-/* -------------------- ROUTES -------------------- */
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/gigs", gigRoutes);
 app.use("/api/bids", bidRoutes);

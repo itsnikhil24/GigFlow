@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react"; // Added Loader2
-import api from "../api/axios";
+// import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
