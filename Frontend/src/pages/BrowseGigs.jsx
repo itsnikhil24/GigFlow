@@ -8,6 +8,8 @@ import { Layout } from '../components/layout/layout';
 import api from '../api/axios';
 import { formatDistanceToNow } from 'date-fns';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const BrowseGigs = () => {
   const [gigs, setGigs] = useState([]);
   const [loading, setLoading] = useState(false);

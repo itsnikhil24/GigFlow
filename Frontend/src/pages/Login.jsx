@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { Briefcase, Mail, Lock, ArrowRight, Loader2 } from "lucide-react"; // Added Loader2
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function Login() {
   const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ export default function Login() {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${API_URL}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );

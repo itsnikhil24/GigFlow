@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -5,6 +6,8 @@ import { ArrowLeft, Briefcase, Send, Loader2 } from 'lucide-react';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { Layout } from '../components/layout/layout'; // Check this path matches your file structure
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateGig = () => {
   const navigate = useNavigate();
@@ -33,7 +36,7 @@ const CreateGig = () => {
     try {
       // The backend expects { title, description, budget }
       // The cookie is sent automatically by 'api' if withCredentials is true
-      const response = await api.post('http://localhost:3000/api/gigs', {
+      const response = await api.post(`${API_URL}/api/gigs`, {
         title: formData.title,
         description: formData.description,
         budget: Number(formData.budget) // Ensure budget is sent as a number

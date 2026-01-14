@@ -42,7 +42,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link to="/dashboard" className="flex items-center gap-2 group">
           <motion.div
             whileHover={{ rotate: 10 }}
             className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm"

@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Briefcase, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react'
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function Signup() {
     const navigate = useNavigate()
 
@@ -20,7 +22,7 @@ export default function Signup() {
         setIsLoading(true)
 
         try {
-            const res = await fetch('http://localhost:3000/api/auth/register', {
+            const res = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

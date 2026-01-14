@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Layout } from '../components/layout/layout';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -27,9 +28,9 @@ export default function Dashboard() {
         const loadDashboard = async () => {
             try {
                 const [userRes, gigsRes, bidsRes] = await Promise.all([
-                    fetch("http://localhost:3000/api/auth/me", { credentials: "include" }),
-                    fetch("http://localhost:3000/api/gigs/mygig", { credentials: "include" }),
-                    fetch("http://localhost:3000/api/bids/mybid", { credentials: "include" }),
+                    fetch(`${API_URL}/api/auth/me`, { credentials: "include" }),
+                    fetch(`${API_URL}/api/gigs/mygig`, { credentials: "include" }),
+                    fetch(`${API_URL}/api/bids/mybid`, { credentials: "include" }),
                 ]);
 
                 if (!userRes.ok) {
